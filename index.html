@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Oyijon — Homiladorlik kundaligi</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  :root{
+    --bg:#FBF4F1;--surface:#fff;--ink:#43303A;--muted:#9A8088;
+    --rose:#C77B86;--rose-d:#A85B6B;--peach:#E0A87E;--green:#84A98C;
+    --line:#F0E2DD;--soft:#FDEEEA;
+  }
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:#EEDDD8;color:var(--ink);}
+  .phone{max-width:480px;margin:0 auto;background:var(--bg);min-height:100vh;
+    display:flex;flex-direction:column;position:relative;}
+
+  /* ONBOARDING */
+  .onb{padding:64px 26px 40px;min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+    background:linear-gradient(170deg,#F7D9D3,#FBF4F1 60%);}
+  .onb .heart{font-size:46px;text-align:center;margin-bottom:8px;}
+  .onb h1{font-size:28px;text-align:center;color:var(--rose-d);margin-bottom:6px;}
+  .onb .sub{text-align:center;color:var(--muted);font-size:14px;margin-bottom:30px;line-height:1.5;}
+  .onb label{display:block;font-size:13px;font-weight:600;color:var(--rose-d);margin:18px 0 8px;}
+  .onb input{width:100%;border:1.5px solid var(--line);border-radius:14px;padding:14px;
+    font-size:16px;outline:none;background:#fff;font-family:inherit;color:var(--ink);}
+  .months{display:flex;flex-wrap:wrap;gap:8px;}
+  .mbtn{flex:1 0 28%;border:1.5px solid var(--line);background:#fff;border-radius:13px;
+    padding:13px 0;font-size:15px;font-weight:600;color:var(--muted);cursor:pointer;text-align:center;}
+  .mbtn.on{background:var(--rose);color:#fff;border-color:var(--rose);}
+  .wk-row{display:flex;align-items:center;gap:10px;margin-top:6px;}
+  .wk-row input[type=range]{flex:1;accent-color:var(--rose);}
+  .wk-val{font-weight:700;color:var(--rose-d);min-width:62px;text-align:right;}
+  .start{width:100%;background:var(--rose-d);color:#fff;border:none;border-radius:15px;
+    padding:16px;font-size:16px;font-weight:700;cursor:pointer;margin-top:28px;}
+
+  /* HEADER */
+  header{background:linear-gradient(160deg,#C77B86,#A85B6B);color:#fff;
+    padding:50px 22px 26px;border-radius:0 0 28px 28px;text-align:center;position:relative;}
+  .hi{font-size:13px;opacity:.85;}
+  .ring-wrap{position:relative;width:150px;height:150px;margin:14px auto 8px;}
+  .ring-wrap svg{transform:rotate(-90deg);}
+  .ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .ring-center .wk{font-size:34px;font-weight:800;line-height:1;}
+  .ring-center .wk small{font-size:14px;font-weight:600;}
+  .ring-center .mo{font-size:12px;opacity:.85;margin-top:3px;}
+  .left{font-size:13px;opacity:.9;margin-top:4px;}
+
+  main{flex:1;padding:18px 16px 96px;}
+  .view{display:none;flex-direction:column;gap:14px;}
+  .view.on{display:flex;}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px;}
+  .card h2{font-size:15px;margin-bottom:12px;color:var(--rose-d);}
+
+  .msg{background:linear-gradient(160deg,#FDEEEA,#FBE3DC);border:1px solid #F4D6CE;
+    border-radius:20px;padding:20px;}
+  .msg .b{font-size:34px;}
+  .msg p{font-size:15.5px;line-height:1.6;margin-top:8px;}
+  .msg .tip{margin-top:12px;font-size:14px;color:var(--rose-d);background:#fff;
+    border-radius:12px;padding:12px;line-height:1.5;}
+
+  .meas{display:flex;gap:10px;}
+  .meas .m{flex:1;background:var(--soft);border-radius:16px;padding:15px 8px;text-align:center;}
+  .meas .m .ic{font-size:20px;}
+  .meas .m b{display:block;font-size:18px;font-weight:800;color:var(--rose-d);margin-top:4px;}
+  .meas .m span{font-size:11px;color:var(--muted);}
+
+  .fruit{display:flex;align-items:center;gap:14px;background:var(--soft);border-radius:16px;padding:14px;}
+  .fruit .e{font-size:34px;}
+  .fruit .t b{font-size:15px;}
+  .fruit .t span{display:block;font-size:13px;color:var(--muted);margin-top:2px;}
+
+  .chart-lbl{font-size:12px;color:var(--muted);margin-bottom:6px;}
+  svg.chart{width:100%;height:auto;display:block;}
+
+  .info-li{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);align-items:flex-start;}
+  .info-li:last-child{border:none;}
+  .info-li .e{font-size:20px;flex:0 0 auto;}
+  .info-li p{font-size:14px;line-height:1.5;}
+  .info-li b{color:var(--rose-d);}
+  .note{font-size:12.5px;color:var(--muted);line-height:1.5;background:var(--soft);
+    border-radius:12px;padding:12px;}
+  .editbtn{width:100%;background:#fff;border:1.5px solid var(--rose);color:var(--rose-d);
+    border-radius:14px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;}
+
+  nav{position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:0 auto;
+    background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-top:1px solid var(--line);
+    display:flex;padding:8px 0 calc(8px + env(safe-area-inset-bottom));}
+  .nav-btn{flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;
+    gap:3px;font-size:11px;font-weight:600;color:var(--muted);cursor:pointer;}
+  .nav-btn.on{color:var(--rose-d);}
+  .nav-ic{font-size:19px;}
+
+  /* Chaqaloq holati */
+  .now{margin-top:14px;font-size:14px;font-weight:600;color:var(--rose-d);
+    background:#fff;border:1px solid var(--line);border-radius:12px;
+    padding:11px 14px;text-align:center;transition:opacity .3s;}
+
+  /* Tavsiyalar bo'limi */
+  .rec-intro{background:linear-gradient(160deg,#FDEEEA,#FBE3DC);border:1px solid #F4D6CE;
+    border-radius:20px;padding:18px;font-size:15px;line-height:1.6;text-align:center;}
+  .rec-intro .b{font-size:30px;}
+  .rec-foods{font-size:14px;line-height:1.65;color:var(--ink);}
+  .why{margin-top:10px;font-size:13.5px;color:var(--rose-d);background:var(--soft);
+    border-radius:12px;padding:10px 12px;line-height:1.5;}
+  .sura{display:inline-block;background:var(--soft);color:var(--rose-d);font-weight:600;
+    font-size:13px;border-radius:10px;padding:7px 12px;margin:5px 5px 0 0;}
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <!-- ONBOARDING -->
+  <div class="onb" id="onb">
+    <div class="heart">🤍</div>
+    <h1>Oyijon</h1>
+    <p class="sub">Homiladorlik kundaligingiz.<br>Avval o'zingiz haqingizda kichik ma'lumot bering.</p>
+
+    <label>Ismingiz (ixtiyoriy)</label>
+    <input id="nameIn" placeholder="Masalan: Muhlisa">
+
+    <label>Necha oylik homiladorsiz?</label>
+    <div class="months" id="months"></div>
+
+    <label>Aniqroq — necha haftalik?</label>
+    <div class="wk-row">
+      <input type="range" id="wkRange" min="4" max="40" value="8">
+      <span class="wk-val" id="wkVal">8-hafta</span>
+    </div>
+
+    <button class="start" onclick="finishOnb()">Boshlash 🤍</button>
+  </div>
+
+  <!-- MAIN -->
+  <div id="app" style="display:none;flex-direction:column;flex:1;">
+    <header>
+      <p class="hi" id="greet">Assalomu alaykum 🤍</p>
+      <div class="ring-wrap">
+        <svg width="150" height="150" viewBox="0 0 150 150">
+          <circle cx="75" cy="75" r="66" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="10"/>
+          <circle id="ring" cx="75" cy="75" r="66" fill="none" stroke="#fff" stroke-width="10"
+                  stroke-linecap="round" stroke-dasharray="415" stroke-dashoffset="415"/>
+        </svg>
+        <div class="ring-center">
+          <span class="wk" id="ringWk">8<small>-hafta</small></span>
+          <span class="mo" id="ringMo">2-oy</span>
+        </div>
+      </div>
+      <p class="left" id="leftDays">Uchrashuvga ~224 kun</p>
+    </header>
+
+    <main>
+      <!-- BUGUN -->
+      <div class="view on" id="v-bugun">
+        <div class="msg">
+          <div class="b" id="msgEmoji">🍓</div>
+          <p id="msgText"></p>
+          <div class="tip" id="msgTip"></div>
+          <div class="now" id="wombStatus">😴 Hozir tinch yotibdi</div>
+        </div>
+
+        <div class="card">
+          <h2>Chaqaloq o'lchamlari</h2>
+          <div class="meas">
+            <div class="m"><div class="ic">⚖️</div><b id="mW">—</b><span>vazni</span></div>
+            <div class="m"><div class="ic">📏</div><b id="mL">—</b><span>bo'yi</span></div>
+            <div class="m"><div class="ic">📅</div><b id="mWk">—</b><span>hafta</span></div>
+          </div>
+          <div class="fruit" style="margin-top:12px;">
+            <span class="e" id="fEmoji">🍓</span>
+            <div class="t"><b id="fName">—</b><span>taxminiy kattalik taqqoslash</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GRAFIK -->
+      <div class="view" id="v-grafik">
+        <div class="card">
+          <h2>Vazn o'sishi (gramm)</h2>
+          <p class="chart-lbl">Hozirgi haftangiz nuqta bilan belgilangan</p>
+          <div id="wChart"></div>
+        </div>
+        <div class="card">
+          <h2>Bo'y o'sishi (sm)</h2>
+          <div id="lChart"></div>
+        </div>
+      </div>
+
+      <!-- MA'LUMOT -->
+      <div class="view" id="v-malumot">
+        <div class="card">
+          <h2>Bu davrda foydali</h2>
+          <div class="info-li"><span class="e">💧</span><p>Yetarli <b>suyuqlik</b> iching — tanangizga ham, chaqaloqqa ham foydali.</p></div>
+          <div class="info-li"><span class="e">🥗</span><p>Mevali, sabzavotli, oqsilga boy <b>muvozanatli ovqat</b> tanlang.</p></div>
+          <div class="info-li"><span class="e">😴</span><p>Yetarli <b>dam oling</b> va charchasangiz, o'zingizni tinch tuting.</p></div>
+          <div class="info-li"><span class="e">🩺</span><p>Shifokor <b>ko'riklarini</b> o'tkazib yubormang.</p></div>
+          <div class="info-li"><span class="e">🚶‍♀️</span><p>Yengil <b>yurish</b> va nafas mashqlari kayfiyatni yaxshilaydi.</p></div>
+        </div>
+
+        <div class="card">
+          <h2>Ma'lumotlarni o'zgartirish</h2>
+          <button class="editbtn" onclick="resetOnb()">Hafta / ismni qayta kiritish</button>
+        </div>
+
+        <p class="note">⚠️ Bu ilova umumiy ma'lumot beradi va o'lchamlar taxminiy o'rtacha qiymatlardir. U shifokor o'rnini bosmaydi. Har doim o'z shifokoringiz maslahatiga amal qiling va ko'riklardan o'tib turing.</p>
+      </div>
+
+      <!-- TAVSIYA -->
+      <div class="view" id="v-tavsiya">
+        <div class="rec-intro">
+          <div class="b">🤍</div>
+          Oyijonim, men sog'lom va kuchli bo'lishim uchun, iltimos, quyidagilarni iste'mol qiling. Har biri menga biror narsada yordam beradi.
+        </div>
+
+        <div class="card">
+          <h2>🧠 Aqlim yaxshi rivojlanishi uchun</h2>
+          <p class="rec-foods">Yong'oq, bodom, baliq, tuxum, avokado, zig'ir urug'i.</p>
+          <div class="why">Bulardagi omega-3 va foliy kislota miyam va aqlim yaxshi rivojlanishiga yordam beradi.</div>
+        </div>
+
+        <div class="card">
+          <h2>👀 Ko'zlarim yaxshi ko'rishi uchun</h2>
+          <p class="rec-foods">Sabzi, qovoq, ismaloq, ko'k sabzavotlar, baliq, tuxum sarig'i.</p>
+          <div class="why">A vitamini va omega-3 ko'zlarim sog'lom rivojlanishiga yordam beradi.</div>
+        </div>
+
+        <div class="card">
+          <h2>🦴 Suyak va tishlarim mustahkam bo'lishi uchun</h2>
+          <p class="rec-foods">Sut, qatiq, pishloq, tvorog, ko'kat sabzavotlar.</p>
+          <div class="why">Kalsiy va D vitamini suyaklarim va tishlarim mustahkam bo'lishi uchun kerak.</div>
+        </div>
+
+        <div class="card">
+          <h2>🩸 Qonim kuchli bo'lishi uchun</h2>
+          <p class="rec-foods">Mol go'shti, no'xat, mosh, ismaloq, anor, qora o'rik.</p>
+          <div class="why">Temir qonimni va sizning qoningizni kuchaytiradi, kamqonlikning oldini oladi.</div>
+        </div>
+
+        <div class="card">
+          <h2>🍊 Kasalliklardan himoyalanishim uchun</h2>
+          <p class="rec-foods">Limon, apelsin, qulupnay, qalampir, mavsumiy mevalar.</p>
+          <div class="why">C vitamini meni va sizni kasalliklardan himoya qiladi, immunitetni kuchaytiradi.</div>
+        </div>
+
+        <div class="card">
+          <h2>🥜 Quruq mevalar (holmeva)</h2>
+          <p class="rec-foods">Bodom, yong'oq, mayiz, turshak (quritilgan o'rik), xurmo, anjir.</p>
+          <div class="why">Bular tabiiy energiya, temir va minerallarga boy — menga kuch beradi.</div>
+        </div>
+
+        <div class="card">
+          <h2>🍲 Yengil ovqatlar</h2>
+          <p class="rec-foods">Sabzavotli sho'rva, suli yoki guruch bo'tqasi, bug'da pishirilgan sabzavot, qatiq, mevali smuzi.</p>
+          <div class="why">Bular oson hazm bo'ladi — sizga ham, menga ham yengil va foydali.</div>
+        </div>
+
+        <div class="card">
+          <h2>💊 Muhim vitamin va minerallar</h2>
+          <p class="rec-foods">
+            • Foliy kislota — miyam va asab tizimim uchun (ayniqsa boshida muhim)<br>
+            • Temir — sog'lom qon uchun<br>
+            • Kalsiy + D vitamini — suyaklarim uchun<br>
+            • Yod — miyam rivojlanishi uchun<br>
+            • Omega-3 (DHA) — aqlim va ko'zlarim uchun
+          </p>
+          <div class="why">Oyijonim, vitaminlarni faqat shifokoringiz tavsiyasi bilan iching — o'zboshimchalik bilan emas. Ba'zi vitaminlar ortiqcha bo'lsa zararli bo'lishi mumkin.</div>
+        </div>
+
+        <div class="card">
+          <h2>📿 Tinchlik uchun tinglang</h2>
+          <p class="rec-foods">Oyijonim, qalbingiz tinch bo'lsa, men ham tinchlanaman. Ko'p onalar quyidagi suralarni tilovat qiladi yoki tinglaydi:</p>
+          <div style="margin-top:8px;">
+            <span class="sura">Al-Fotiha</span><span class="sura">Yosin</span>
+            <span class="sura">Maryam</span><span class="sura">Yusuf</span>
+            <span class="sura">Luqmon</span><span class="sura">Ar-Rahmon</span>
+            <span class="sura">Al-Baqara</span>
+          </div>
+          <div class="why">Qur'on tilovatini tinglash ko'ngilga osoyishtalik va baraka baxsh etadi. Niyat — Allohdan sog'lom farzand so'rash.</div>
+        </div>
+
+        <div class="card">
+          <h2>🌸 Yana e'tibor bering</h2>
+          <p class="rec-foods">Kuniga ko'p suv iching, yetarli dam oling, har kuni yengil sayr qiling. Chala pishgan go'sht va tuxum, ortiqcha kofe, hamda o'z bilganicha dori-darmondan saqlaning.</p>
+        </div>
+
+        <p class="note">⚠️ Bu umumiy tavsiyalar. Sizning salomatligingizga mos aniq parhez va vitaminlarni faqat shifokoringiz belgilaydi. Har qanday o'zgarishdan oldin u bilan maslahatlashing.</p>
+      </div>
+    </main>
+
+    <nav>
+      <button class="nav-btn on" data-tab="bugun" onclick="go('bugun')"><span class="nav-ic">🤍</span>Bugun</button>
+      <button class="nav-btn" data-tab="grafik" onclick="go('grafik')"><span class="nav-ic">📈</span>Grafik</button>
+      <button class="nav-btn" data-tab="malumot" onclick="go('malumot')"><span class="nav-ic">📖</span>Ma'lumot</button>
+      <button class="nav-btn" data-tab="tavsiya" onclick="go('tavsiya')"><span class="nav-ic">🍎</span>Tavsiya</button>
+    </nav>
+  </div>
+</div>
+
+<script>
+// hafta: [meva, emoji, vazn(g), bo'y(sm), maslahat]
+const W={
+4:["ko'knori urug'i","🌱",0.4,0.4,"Foliy kislota va shifokor maslahati bu davrda juda muhim."],
+5:["kunjut urug'i","🌱",0.6,0.6,"Yurakcha endi ura boshlaydi. Ko'proq dam oling."],
+6:["yasmiq","🫘",0.9,0.8,"Ko'ngil aynishi bo'lishi mumkin — kichik-kichik ovqatlaning."],
+7:["ko'k rezavor","🫐",1,1.3,"Yetarli suyuqlik iching va o'zingizni tinch tuting."],
+8:["malina","🫐",1,1.6,"Charchoq tabiiy holat — tanangiz juda ko'p ishlayapti."],
+9:["uzum donasi","🍇",2,2.3,"Mevali va sabzavotli ovqatlar foydali."],
+10:["qulupnay","🍓",4,3.1,"Birinchi UST ko'rigi haqida shifokor bilan gaplashing."],
+11:["anjir","🫒",7,4.1,"Tirnoq va sochlaringiz tezroq o'sishi mumkin."],
+12:["limon","🍋",14,5.4,"Birinchi trimestr yakunlanmoqda — ko'ngil aynishi kamayadi."],
+13:["no'xat qini","🫛",23,7.4,"Ikkinchi trimestr — ko'pchilik uchun eng yengil davr."],
+14:["shaftoli","🍑",43,8.7,"Kichik energiya qaytadi. Yengil yurish foydali."],
+15:["olma","🍎",70,10.1,"Chaqaloq ovozlarni sezishni boshlaydi."],
+16:["avokado","🥑",100,11.6,"Tez orada ilk harakatlarni sezishingiz mumkin."],
+17:["anor","🫛",140,13,"Suyaklar mustahkamlanyapti — sog'lom taom muhim."],
+18:["qalampir","🫑",190,14.2,"Yon yotib uxlash qulayroq bo'ladi."],
+19:["mango","🥭",240,15.3,"Teri o'zgarishlari tabiiy. Nam saqlovchi krem yordam beradi."],
+20:["banan","🍌",300,25.6,"Yarim yo'lni bosib o'tdingiz! 🤍"],
+21:["sabzi","🥕",360,26.7,"Chaqaloq harakatlari sezilarli bo'la boshlaydi."],
+22:["papaya","🫐",430,27.8,"U sizning ovozingizni eshita boshlaydi."],
+23:["greypfrut","🍊",501,28.9,"Oyoq shishsa, oyoqlarni ko'tarib dam oling."],
+24:["makkajo'xori","🌽",600,30,"Muhim chegara — chaqaloq tez o'syapti."],
+25:["gulkaram","🥦",660,34.6,"Sochlari va rangi shakllanyapti."],
+26:["salat bargi","🥬",760,35.6,"Ko'zchalari ochila boshlaydi."],
+27:["karam","🥬",875,36.6,"Uchinchi trimestrga yaqinlashyapsiz."],
+28:["baqlajon","🍆",1005,37.6,"Uchinchi trimestr boshlandi — ko'riklarni ko'paytiring."],
+29:["qovoq","🎃",1153,38.6,"Chaqaloq harakatlarini har kuni kuzatib boring."],
+30:["katta karam","🥬",1319,39.9,"Bel og'rig'i bo'lsa, to'g'ri o'tirishga harakat qiling."],
+31:["kokos","🥥",1502,41.1,"Miyasi juda tez rivojlanyapti."],
+32:["ananas (kichik)","🍍",1702,42.4,"Chaqaloq pastga tusha boshlaydi."],
+33:["ananas","🍍",1918,43.7,"Immuniteti shakllanyapti."],
+34:["qovun","🍈",2146,45,"Tug'ruq sumkasini tayyorlab qo'ysangiz bo'ladi."],
+35:["shirin qovun","🍈",2383,46.2,"Ko'p dam oling, nafas mashqlari foydali."],
+36:["papaya (katta)","🥭",2622,47.4,"Chaqaloq deyarli tayyor — ko'riklar muhim."],
+37:["qovun","🍈",2859,48.6,"To'liq muddatga juda yaqinsiz."],
+38:["oshqovoq","🎃",3083,49.8,"Har qanday yangi belgini shifokorga ayting."],
+39:["tarvuz (kichik)","🍉",3288,50.7,"Sabr — uchrashuvga oz qoldi 🤍"],
+40:["tarvuz","🍉",3462,51.2,"Tabriklaymiz! Chaqalog'ingiz dunyoga kelishga tayyor 🤍"]
+};
+
+let profile=null;
+let selMonth=2;
+
+const monthToWeek={1:6,2:8,3:13,4:17,5:21,6:26,7:30,8:35,9:39};
+
+function fmtW(g){ if(g<1) return "<1 g"; if(g>=1000) return (g/1000).toFixed(2)+" kg"; return Math.round(g)+" g"; }
+function monthOf(wk){ return Math.max(1,Math.min(9,Math.ceil(wk/4.345))); }
+function trimester(wk){ return wk<=12?"1-trimestr":wk<=27?"2-trimestr":"3-trimestr"; }
+
+// onboarding month buttons
+const mbox=document.getElementById('months');
+for(let m=1;m<=9;m++){
+  const b=document.createElement('button');b.className='mbtn'+(m===2?' on':'');b.textContent=m+"-oy";
+  b.onclick=()=>{selMonth=m;document.querySelectorAll('.mbtn').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');const w=monthToWeek[m];document.getElementById('wkRange').value=w;
+    document.getElementById('wkVal').textContent=w+"-hafta";};
+  mbox.appendChild(b);
+}
+document.getElementById('wkRange').oninput=e=>{document.getElementById('wkVal').textContent=e.target.value+"-hafta";};
+
+function load(){try{profile=JSON.parse(localStorage.getItem('oyijon_v1')||'null')}catch(e){profile=null}}
+function save(){try{localStorage.setItem('oyijon_v1',JSON.stringify(profile))}catch(e){}}
+
+function finishOnb(){
+  const wk=parseInt(document.getElementById('wkRange').value);
+  profile={name:document.getElementById('nameIn').value.trim(),startWeek:wk,startDate:new Date().toISOString().slice(0,10)};
+  save();showApp();
+}
+function resetOnb(){
+  document.getElementById('app').style.display='none';
+  document.getElementById('onb').style.display='flex';
+  if(profile){document.getElementById('nameIn').value=profile.name||'';}
+}
+
+function currentWeek(){
+  const start=new Date(profile.startDate+'T00:00:00');
+  const days=Math.floor((Date.now()-start)/86400000);
+  return Math.max(4,Math.min(40,profile.startWeek+Math.floor(days/7)));
+}
+
+function go(tab){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  document.getElementById('v-'+tab).classList.add('on');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab));
+}
+
+const openers=[
+  "Oyijonim, assalomu alaykum! Men bu hafta {f} kattaligidaman, tez orada uchrashamiz 🤍",
+  "Oyijonim, sizni juda sog'indim — men {f}dek kattalashdim, ko'rishadigan kunimiz yaqin 🌸",
+  "Oyijonim, bugun ham yoningizdaman. Men {f} kattaligida o'syapman, tez orada quchog'ingizdaman 💕",
+  "Oyijonim, qalbingiz ostida tinch o'syapman — {f}dek bo'ldim, uchrashuvimizga oz qoldi 🤍",
+  "Oyijonim, sizni yaxshi ko'raman! Men {f} kattaligidaman, har kuni sizga yaqinroqman 🌷",
+  "Oyijonim, rahmat, menga g'amxo'rlik qilyapsiz. Men {f}dek o'sdim, tez kunda yuzma-yuz bo'lamiz 💗",
+  "Oyijonim, yuragingiz tovushi menga eng yoqimli kuy. Men {f} kattaligidaman, ko'rishar kunimiz yaqin 🤍",
+  "Oyijonim, men shu yerda, xavfsizman. {f}dek kattalashdim — biroz sabr, tez orada uchrashamiz 🌸",
+  "Oyijonim, har kuni kuchayib boryapman. Men {f} kattaligidaman, quchog'ingizni intiqlik bilan kutyapman 💕",
+  "Oyijonim, salom! Bugun men {f}dek bo'ldim. Sizni allaqachon yaxshi ko'raman 🤍",
+  "Oyijonim, siz dam oling, men bu yerda baxtliman. {f} kattaligida o'syapman, uchrashuvimiz yaqinlashyapti 🌼",
+  "Oyijonim, sizni eshityapman va his qilyapman. Men {f}dek kattalashdim, tez orada birga bo'lamiz 💗",
+  "Oyijonim, bugun ham sog'-salomatman 🤍 Men {f} kattaligidaman, ko'rishadigan kunimizni intiqlik bilan kutaman 🌸",
+  "Oyijonim, sizning mehringiz meni o'stiryapti. {f}dek bo'ldim — tez orada quchog'ingizga oshiqaman 💕"
+];
+
+function showApp(){
+  document.getElementById('onb').style.display='none';
+  document.getElementById('app').style.display='flex';
+  const wk=currentWeek();
+  const d=W[wk];
+  const mo=monthOf(wk);
+
+  // header
+  document.getElementById('greet').textContent =
+    (profile.name? profile.name+", assalomu alaykum 🤍" : "Assalomu alaykum 🤍");
+  document.getElementById('ringWk').innerHTML = wk+"<small>-hafta</small>";
+  document.getElementById('ringMo').textContent = mo+"-oy · "+trimester(wk);
+  const pct=wk/40;
+  document.getElementById('ring').style.strokeDashoffset = 415*(1-pct);
+  const leftDays=Math.max(0,(40-wk)*7);
+  document.getElementById('leftDays').textContent =
+    leftDays>0 ? "Uchrashuvga ~"+leftDays+" kun qoldi" : "Muddat to'ldi 🤍";
+
+  // message
+  const op=openers[Math.floor(Math.random()*openers.length)].replace("{f}", d[0]);
+  document.getElementById('msgEmoji').textContent=d[1];
+  document.getElementById('msgText').textContent =
+    op+" Vaznim taxminan "+fmtW(d[2])+", bo'yim "+d[3]+" sm.";
+  document.getElementById('msgTip').textContent="💡 "+d[4];
+
+  // measurements
+  document.getElementById('mW').textContent=fmtW(d[2]);
+  document.getElementById('mL').textContent=d[3]+" sm";
+  document.getElementById('mWk').textContent=wk;
+  document.getElementById('fEmoji').textContent=d[1];
+  document.getElementById('fName').textContent=d[0];
+
+  // charts
+  drawChart('wChart', wk, x=>W[x][2], "g", "#C77B86");
+  drawChart('lChart', wk, x=>W[x][3], "sm", "#84A98C");
+
+  startWomb(wk);
+}
+
+let wombTimer=null;
+function startWomb(wk){
+  let acts=["😴 Hozir tinch yotibdi"];
+  if(wk>=10) acts.push("💗 Yuragi urib turibdi");
+  if(wk>=12) acts.push("🤲 Qo'lchasini yuziga yaqinlashtiryapti");
+  if(wk>=16) acts.push("🦵 Oyoqchasini cho'zyapti");
+  if(wk>=18) acts.push("🌀 Qimirlab harakat qilyapti");
+  if(wombTimer) clearInterval(wombTimer);
+  let i=0; const el=document.getElementById("wombStatus");
+  const apply=()=>{ if(el) el.textContent=acts[i%acts.length]; i++; };
+  apply(); wombTimer=setInterval(apply,4500);
+}
+
+function drawChart(id, curWk, valFn, unit, color){
+  const weeks=Object.keys(W).map(Number);
+  const vals=weeks.map(valFn);
+  const maxV=Math.max(...vals), minW=weeks[0], maxW=weeks[weeks.length-1];
+  const w=320,h=170,pl=8,pr=8,pt=14,pb=22;
+  const X=wk=>pl+(wk-minW)/(maxW-minW)*(w-pl-pr);
+  const Y=v=>pt+(1-v/maxV)*(h-pt-pb);
+  let path="";
+  weeks.forEach((wk,i)=>{path+=(i===0?"M":"L")+X(wk).toFixed(1)+" "+Y(valFn(wk)).toFixed(1)+" ";});
+  // area
+  let area=path+"L"+X(maxW)+" "+(h-pb)+" L"+X(minW)+" "+(h-pb)+" Z";
+  const cx=X(curWk), cy=Y(valFn(curWk));
+  let ticks="";
+  [minW,12,20,28,40].forEach(wk=>{ticks+=`<text x="${X(wk)}" y="${h-6}" font-size="10" fill="#9A8088" text-anchor="middle">${wk}</text>`;});
+  document.getElementById(id).innerHTML=
+   `<svg class="chart" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">
+      <path d="${area}" fill="${color}22"/>
+      <path d="${path}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linejoin="round"/>
+      <line x1="${cx}" y1="${pt}" x2="${cx}" y2="${h-pb}" stroke="${color}" stroke-width="1" stroke-dasharray="3 3" opacity=".5"/>
+      <circle cx="${cx}" cy="${cy}" r="5.5" fill="#fff" stroke="${color}" stroke-width="3"/>
+      <text x="${cx}" y="${cy-10}" font-size="11" font-weight="700" fill="${color}" text-anchor="middle">${unit==="g"?fmtW(valFn(curWk)):valFn(curWk)+" "+unit}</text>
+      ${ticks}
+    </svg>`;
+}
+
+// init
+load();
+if(profile){ showApp(); }
+</script>
+</body>
+</html>
